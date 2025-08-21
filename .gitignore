@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+.DS_Store
+weights/
+*.pth
+uploads/
+tmp/
+dist/
+build/
+*.png
+*.jpg
+*.jpeg

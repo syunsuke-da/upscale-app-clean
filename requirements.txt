@@ -1,0 +1,9 @@
+flask==3.0.0
+Werkzeug==3.0.1
+opencv-python-headless==4.10.0.84
+realesrgan==0.3.0
+torch>=2.1.0
+numpy==1.26.4
+Pillow==10.2.0
+gunicorn==21.2.0
+requests==2.32.3

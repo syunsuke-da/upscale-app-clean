@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Image Upscaler – 2x Fast / 4x Pro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gray-50">
+  <div class="max-w-3xl mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-2">Image Upscaler</h1>
+    <p class="text-gray-600 mb-6">2x（高速・無料） / 4x（高品質）を選んで、画像を拡大できます。</p>
+
+    <form id="form" class="space-y-4" method="post" action="/upscale" enctype="multipart/form-data">
+      <div class="p-4 bg-white rounded-2xl shadow">
+        <label class="block text-sm font-medium mb-1">画像（JPG/PNG・5MBまで）</label>
+        <input class="block w-full text-sm" type="file" name="image" accept="image/*" required />
+      </div>
+
+      <div class="p-4 bg-white rounded-2xl shadow">
+        <label class="block text-sm font-medium mb-2">モード</label>
+        <div class="flex items-center gap-4">
+          <label class="inline-flex items-center gap-2">
+            <input type="radio" name="mode" value="2x" checked />
+            <span>2x（高速・CPU）</span>
+          </label>
+          <label class="inline-flex items-center gap-2">
+            <input type="radio" name="mode" value="4x" />
+            <span>4x（高品質・Real-ESRGAN）</span>
+          </label>
+        </div>
+      </div>
+
+      <button class="px-5 py-2 rounded-xl bg-blue-600 text-white font-semibold shadow hover:bg-blue-700">
+        アップスケールする
+      </button>
+    </form>
+
+    <p class="text-xs text-gray-500 mt-8">
+      利用規約・プライバシー：アップロード画像は処理後<strong>即時破棄</strong>されます。解析目的の匿名化アクセスログのみ保存します。
+    </p>
+  </div>
+</body>
+</html>
