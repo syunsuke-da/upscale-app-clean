@@ -1,4 +1,4 @@
-
+									
 import os, time, io, uuid
 from datetime import datetime, timedelta
 from flask import Flask, render_template, request, send_file, abort
@@ -8,9 +8,17 @@ import cv2
 
 app = Flask(__name__)
 
-@app.get("/healthz")
+@app.route("/healthz", methods=["GET"])
 def healthz():
     return "ok", 200
+
+@app.route("/", methods=["GET"])
+def index():    return "Hello from Cloud Run", 200
+
+# ルート一覧を返すデバッグ用（動作確認に便利）
+@app.route("/__routes", methods=["GET"])
+def __routes():
+    return "\n".join(sorted([f"{r.rule} -> {sorted(r.methods)}" for r in app.url_map.iter_rules()]))																	
 
 # ---- Optional: Real-ESRGAN (lazy load) ----
 _REALSRGAN = None
@@ -30,6 +38,12 @@ def load_realesrgan():
     except Exception as e:
         print("Real-ESRGANの読み込みに失敗:", e)
         return None
+
+# ローカル実行用（Cloud Run では使われません）
+if __name__ == "__main__":
+    # 127.0.0.1:8080 で起動（PORT 環境変数があればそれを使う)
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host="0.0.0.0", port=port, debug=True)
 
 # ---- Simple in-memory rate limit ----
 WINDOW_SEC = 60
@@ -114,3 +128,5 @@ def upscale():
 if __name__ == "__main__":
     # 本番は gunicorn を推奨: gunicorn app:app -w 2 -k gthread --threads 4 --timeout 120
     app.run(host="0.0.0.0", port=8000, debug=True)
+							
+	
