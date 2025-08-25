@@ -1,9 +1,16 @@
+
 import os, time, io, uuid
 from datetime import datetime, timedelta
 from flask import Flask, render_template, request, send_file, abort
 from PIL import Image
 import numpy as np
 import cv2
+
+app = Flask(__name__)
+
+@app.get("/healthz")
+def healthz():
+    return "ok", 200
 
 # ---- Optional: Real-ESRGAN (lazy load) ----
 _REALSRGAN = None
