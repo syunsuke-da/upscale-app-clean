@@ -134,3 +134,20 @@ if __name__ == "__main__":
 @app.route("/__version", methods=["GET"])
 def __version():
     return os.environ.get("GIT_SHA","unknown"), 200
+
+@app.route("/__routes", methods=["GET"])
+def __routes():
+    return "\n".join(sorted([f"{r.rule} -> {sorted(r.methods)}" for r in app.url_map.iter_rules()])), 200
+
+# Cloud Run/一般的なLBでよく使うヘルスパスを全部用意
+@app.route("/healthz", methods=["GET"])
+def healthz():
+    return "ok", 200
+
+@app.route("/_ah/health", methods=["GET"])
+def ah_health():
+    return "ok", 200
+
+@app.route("/health", methods=["GET"])
+def health_simple():
+    return "ok", 200
