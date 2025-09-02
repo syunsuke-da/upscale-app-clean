@@ -1,6 +1,18 @@
+# PyTorch を CPU 版で（軽量＆互換性安定）
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.3.1+cpu
+torchvision==0.18.1+cpu
+
+# Real-ESRGAN の依存
+realesrgan==0.3.0
+basicsr==1.4.2
+facexlib==0.3.0
+
+# 数値/画像系（numpy は v2 未満に固定して互換性を保つ）
+numpy<2.0
+opencv-python-headless==4.10.0.84
+pillow
+
+# Web
 flask
 gunicorn
-pillow
-torch==2.3.1
-torchvision==0.18.1
-opencv-python-headless==4.10.0.84

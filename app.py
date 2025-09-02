@@ -1,3 +1,14 @@
+import urllib.request
+
+WEIGHT_URL = "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/RealESRGAN_x4plus.pth"
+WEIGHT_PATH = "/tmp/RealESRGAN_x4plus.pth"
+
+def ensure_realesrgan_weights():
+    """/tmp に重みが無ければダウンロードしてパスを返す"""
+    if not os.path.exists(WEIGHT_PATH):
+        os.makedirs(os.path.dirname(WEIGHT_PATH), exist_ok=True)
+        urllib.request.urlretrieve(WEIGHT_URL, WEIGHT_PATH)
+    return WEIGHT_PATH
 									
 import os, time, io, uuid
 from datetime import datetime, timedelta
@@ -82,12 +93,24 @@ def upscale_fast_2x(img_pil):
 
 def upscale_realesrgan_4x(img_pil):
     model = load_realesrgan()
-    if model is None:
-        raise RuntimeError("高品質モデルが未準備です（後で再試行してください）")
-    np_img = np.array(img_pil.convert('RGB'))
-    sr_img = model.predict(np_img)  # returns numpy RGB
-    return Image.fromarray(sr_img)
-
+# ---- Real-ESRGAN (lazy load) ----
+_REALSRGAN = None
+def load_realesrgan():
+    global _REALSRGAN
+    if _REALSRGAN is not None:
+        return _REALSRGAN
+    try:
+        from realesrgan import RealESRGAN
+        import torch
+        device = torch.device('cpu')  # Cloud Run は CPU
+        model = RealESRGAN(device, scale=4)
+        weights = ensure_realesrgan_weights()
+        model.load_weights(weights)
+        _REALSRGAN = model
+        return _REALSRGAN
+    except Exception as e:
+        print("Real-ESRGANの読み込みに失敗:", e)
+        return None
 @app.route("/", methods=["GET"])
 def index():
     return render_template("index.html")
